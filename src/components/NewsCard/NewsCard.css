@@ -11,30 +11,12 @@
 
 .card__img {
   border-radius: 16px 16px 0 0;
-  /* background-image: url("../../images/card-dog.png"); */
+  background-image: url("../../images/card-dog.png");
   background-repeat: no-repeat;
   background-position: center;
   min-height: 272px;
   display: flex;
   justify-content: space-between;
-}
-.card1 {
-  background-image: url("../../images/card-dog.png");
-}
-
-.card2 {
-  background-image: url("../../images/card-fjord.png");
-}
-
-.card3 {
-  background-image: url("../../images/card-yellowstone.png");
-}
-
-.card4 {
-  background-image: url("../../images/card-moose.png");
-}
-.card5 {
-  background-image: url("../../images/card-polaris.png");
 }
 
 .card__keyword-display {
@@ -153,6 +135,12 @@
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin: 0 24px 24px;
+}
+@media screen and (max-width: 1240  px) {
+  .card {
+    max-width: 190px;
+    max-height: 420px;
+  }
 }
 
 @media screen and (max-width: 800px) {

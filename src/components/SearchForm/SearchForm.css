@@ -45,11 +45,11 @@
   right: -1%;
 }
 
-.search__btn:hover {
+.search__submit:hover {
   background-color: #347eff;
 }
 
-.search__btn:active {
+.search__submit:active {
   background-color: #2a65cc;
 }
 
