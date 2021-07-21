@@ -2,7 +2,9 @@
   border-radius: 16px;
   max-width: 400px;
   background-color: #fff;
+  margin: 0;
   margin-bottom: 8px;
+  padding: 0;
 }
 
 .card:hover {
@@ -45,10 +47,10 @@
   margin-top: 24px;
   margin-right: 24px;
   border: none;
+  background-color: #fff;
   background-repeat: no-repeat;
   background-size: 14px 19px;
   background-position: center;
-  background-color: #fff;
 }
 
 .card__btn_bookmark {

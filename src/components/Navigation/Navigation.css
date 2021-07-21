@@ -41,6 +41,7 @@
 .navigation__btn-username {
   text-overflow: ellipsis;
   margin-right: 20px;
+  vertical-align: center;
 }
 
 .navigation__text:hover {

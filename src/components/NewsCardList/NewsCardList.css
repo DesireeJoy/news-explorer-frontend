@@ -1,13 +1,14 @@
 .cards {
   background-color: #f5f6f7;
   padding-bottom: 80px;
+  padding-top: 62px;
 }
 .cards__block {
   display: flex;
   flex-direction: column;
   background-color: #f5f6f7;
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: 1232px;
 }
 
 .cards__list {
@@ -78,6 +79,7 @@
 @media screen and (max-width: 800px) {
   .cards {
     padding-bottom: 40px;
+    padding-top: 32px;
   }
   .cards__block {
     padding: 0px;
@@ -95,6 +97,7 @@
 @media screen and (max-width: 500px) {
   .cards {
     padding-bottom: 32px;
+    padding-top: 24px;
   }
 
   .cards__list {

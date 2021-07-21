@@ -6,10 +6,12 @@ function SavedNews(props){
         (
             <section className='savedNews-main'>               
                 <SavedNewsHeader />
+                <div className='cards'>
                 <div className='cards__block'>
                 <NewsCardList
                 loggedin={props.loggedin}
                 savedNewsLocation={props.savedNewsLocation} />
+                </div>
                 </div>
             </section>
         )
