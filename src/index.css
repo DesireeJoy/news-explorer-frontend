@@ -9,10 +9,12 @@
 @import url("./components/SavedNews/SavedNews.css");
 @import url("./components/SavedNewsHeader/SavedNewsHeader.css");
 @import url("./components/SearchForm/SearchForm.css");
-@import url("./components/Preloader/preloader.css");
+@import url("./components/Preloader/Preloader.css");
+@import url("./components/NotFound/Notfound.css");
 @import url("./components/NewsCardList/NewsCardList.css");
 @import url("./components/NewsCard/NewsCard.css");
 @import url("./components/Footer/Footer.css");
 @import url("./components/Popup/Popup.css");
 @import url("./components/LoginPopup/LoginPopup.css");
 @import url("./components/ConfirmationPopup/ConfirmationPopup.css");
+@import url("./components/About/About.css");
