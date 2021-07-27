@@ -15,15 +15,15 @@ function RegisterPopup(props) {
                 onSubmit={props.onSubmit}
                 name='sign-up' title='Sign up'
             >
-                <div className="login" >
+                <div className="login" >    
                     <label className='login__label'>Email</label>
-                    <input className="login__input" placeholder="Enter your email" name="email" type="email" required value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                    <input className="login__input" placeholder="Enter your email" name="email" type="email" required value={email} onChange={props.handleChangeForm} />
                     <label className='login__label'>Password</label>
-                    <input className="login__input" placeholder="Enter password" name="password" type="password" required value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                    <input className="login__input" placeholder="Enter password" name="password" type="password" required value={password} onChange={props.handleChangeForm} />
                     <label className='login__label'>Username</label>
-                    <input className="login__input" placeholder="Enter your username" name="username" type="text" required value={username} onChange={(e) => { setUsername(e.target.value) }} />
-                    <span className='login__error'>This email is not available</span>
-                    <button type="submit" className="login__btn">Sign up</button>
+                    <input className="login__input" placeholder="Enter your username" name="username" type="text" required value={username} onChange={props.handleChangeForm} />
+                    <span className='login__error'>This email is not available</span> 
+                    <button type="submit"   className="login__btn">Sign up</button>
 
 
                     <div className="login__signup">

@@ -8,7 +8,9 @@ import ConfirmationPopup from '../ConfirmationPopup/ConfirmationPopup';
 import RegisterPopup from '../RegisterPopup/RegisterPopup';
 import Footer from '../Footer/Footer';
 import './App.css'; 
-
+import * as mainApi from "../../utils/MainApi";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
  function App() {
  /* State Variables */
@@ -19,30 +21,90 @@ import './App.css';
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
-
-
+  const [currentUser, setCurrentUser] = React.useState({});
   const location = useLocation();
   const history= useHistory();
  const savedNewsLocation = location.pathname === '/saved-news';
+const [values, setValues] = React.useState({ email: '', password: '', username: '' });
 
- 
-function handleSignup(e){ 
-    e.preventDefault();
-    setConfirmationPopupOpen(true);
-    setRegisterPopupOpen(false);
+
+  React.useEffect(() => {
+    //debugger;
+    handleCheckToken();
+  }, []);
+
+
+   function handleCheckToken() {
+    const jwt = localStorage.getItem("token");
+if (jwt) {
+      mainApi
+        .checkToken(jwt)
+        .then(res => {
+          if (res) {
+      setValues({ email: res.email, username: res.username });
+            setLoggedin(true);
+            history.push('/')
+          }
+        })
+        .catch(err => {
+          console.log("Err: " + err);
+        });
+    }
   }
-  function handleSignIn(e){ 
-    e.preventDefault();
-    setLoggedin(true);   
-    history.push('/saved-news');
-    closeAllPopups();   
+
+  function handleSignup(email, password, username){ 
+    console.log(username + email)
+    mainApi.register(email, password, username)
+    .then((res) =>{
+      console.log(res);
+    })
+    handleCheckToken();
+        history.push("/");
   }
-function handleSignOut(e){ 
+  const handleChangeForm = (e) => {
+    
+   const { name, value } = e.target;
+
+    const newValues = {
+      ...values,
+      [name]: value,
+    };
+    setValues(newValues);
+  };
+
+
+
+  function handleSignIn(e) {
+      e.preventDefault();
+    mainApi
+      .authorize(values.email, values.password)
+      .then(() => {
+        handleCheckToken();
+      
+        history.push("/");
+        closeAllPopups();  
+      })
+      .catch(res => {
+        if (res === 400) {
+          console.log("A field was completed incorrectly");
+        }
+        if (res === 401) {
+          console.log("user email not found");
+        }
+      });
+  }
+
+
+   function handleSignOut(e) {
     e.preventDefault();
+    localStorage.removeItem('jwt');
     setLoggedin(false);   
     history.push('/');
     closeAllPopups();   
-  }  
+    window.location.reload();
+  }
+
+
 function closeAllPopups() {    
     setLoginPopupOpen(false);
     setRegisterPopupOpen(false);
@@ -77,12 +139,11 @@ setIsMobile(screenWidth < 768);
   }, [screenWidth]);
 
 
-   console.log(Loggedin + " is logged in")
-
 
   return (
      <>
       <div className="page">
+         <CurrentUserContext.Provider value={currentUser}>  
        <Header 
        loggedin={Loggedin}
        savedNewsLocation={savedNewsLocation}
@@ -99,12 +160,13 @@ setIsMobile(screenWidth < 768);
             <Main
             />
           </Route>
-          <Route path='/saved-news'>
-            <SavedNews
+            <ProtectedRoute
+              exact path='/saved-news'
+              component={SavedNews}
               loggedin={Loggedin}
               savedNewsLocation={savedNewsLocation}
+              currentUser={currentUser}
             />
-          </Route> 
         </Switch>
 
 
@@ -114,18 +176,23 @@ setIsMobile(screenWidth < 768);
           onClose={closeAllPopups}
           isOpen={isLoginPopupOpen}
           onSubmit={handleSignIn}
+          handleChangeForm={handleChangeForm}
+          values={values}
         />
         <RegisterPopup
           onSigninClick={handleSigninClick}
           onClose={closeAllPopups}
           isOpen={isRegisterPopupOpen}
           onSubmit={handleSignup}
+          handleChangeForm={handleChangeForm}
+          values={values}
         />
         <ConfirmationPopup
         onSigninClick={handleSigninClick}
         onClose={closeAllPopups}
         isOpen={isConfirmationPopupOpen}
         />
+        </CurrentUserContext.Provider>
        </div>
      </>
    );

@@ -3,8 +3,13 @@ import About from '../About/About'
 import NewsCardList from '../NewsCardList/NewsCardList'
 import NotFound from '../NotFound/Notfound'
 import Preloader from '../Preloader/Preloader'
+import CurrentUserContext from "../../contexts/CurrentUserContext";
+import React from "react";
 
 function Main(props) {
+
+  const currentUser = React.useContext(CurrentUserContext);
+  
   return (
  <main className='main'>
                 <div className='page__background'>
