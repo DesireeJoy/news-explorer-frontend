@@ -97,7 +97,7 @@ if (jwt) {
 
    function handleSignOut(e) {
     e.preventDefault();
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     setLoggedin(false);   
     history.push('/');
     closeAllPopups();   
