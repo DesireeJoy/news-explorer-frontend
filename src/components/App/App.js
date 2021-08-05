@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Route, Switch, useLocation, useHistory} from 'react-router-dom';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -8,7 +8,7 @@ import ConfirmationPopup from '../ConfirmationPopup/ConfirmationPopup';
 import RegisterPopup from '../RegisterPopup/RegisterPopup';
 import Footer from '../Footer/Footer';
 import './App.css'; 
-import * as mainApi from "../../utils/MainApi";
+import { mainApi } from '../../utils/MainApi';
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
@@ -22,10 +22,15 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   const [currentUser, setCurrentUser] = React.useState({});
+  const [wrongEmailOrPasswordMessage, setWrongEmailOrPasswordMessage] = React.useState("")
   const location = useLocation();
   const history= useHistory();
  const savedNewsLocation = location.pathname === '/saved-news';
 const [values, setValues] = React.useState({ email: '', password: '', username: '' });
+
+  const [errors, setErrors] = React.useState({});
+  const [isValid, setIsValid] = React.useState(false);
+  const [duplicateEmail, setDuplicateEmail] = React.useState(false);
 
 
   React.useEffect(() => {
@@ -36,13 +41,15 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
 
    function handleCheckToken() {
     const jwt = localStorage.getItem("token");
-if (jwt) {
+  if (jwt) {
+  console.log("I see the jwt")
       mainApi
         .checkToken(jwt)
         .then(res => {
           if (res) {
-      setValues({ email: res.email, username: res.username });
             setLoggedin(true);
+            setValues({ email: res.email, password: res.password, username: res.username });
+            console.log(res)
             history.push('/')
           }
         })
@@ -50,17 +57,55 @@ if (jwt) {
           console.log("Err: " + err);
         });
     }
+  
   }
 
-  function handleSignup(email, password, username){ 
-    console.log(username + email)
-    mainApi.register(email, password, username)
-    .then((res) =>{
-      console.log(res);
-    })
-    handleCheckToken();
-        history.push("/");
+
+ function fieldValidation() {
+    const validEmailRegex = RegExp(
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/i
+    );
+    setErrors((origErrors) => ({
+      ...origErrors,
+      email: validEmailRegex.test(values.email) ? "" : "Invalid email address",
+    }));
+
   }
+
+  function handleSignup(e){ 
+    e.preventDefault();
+    mainApi.register(values.email, values.password, values.username)
+    .then((res) =>{
+
+       if (res.message === 'Duplicate User') {      
+         setDuplicateEmail(true)    
+          return Promise.reject(`Error! ${res.message}`);
+        }
+        if (res.ok){
+      return res.json();
+        }
+    })
+    .then(() => {
+        setConfirmationPopupOpen(true);
+        setRegisterPopupOpen(false);
+        setDuplicateEmail(false)       
+        resetForm();
+      })
+      .catch(err => console.log(err));
+  
+    // handleCheckToken();
+    //     history.push("/");
+  }
+
+
+
+
+
+
+  
+
+
+  // Handle login and register form typing
   const handleChangeForm = (e) => {
     
    const { name, value } = e.target;
@@ -70,28 +115,84 @@ if (jwt) {
       [name]: value,
     };
     setValues(newValues);
+    fieldValidation(newValues);
+    setErrors({ ...errors, [name]: errors[name] });
+    setIsValid(e.target.closest('form').checkValidity());
   };
 
+  const resetForm = useCallback(
+    (
+      newValues = { email: '', password: '', username: '' },
+      newErrors = { email: '', password: '', username: '' },
+      newIsValid = false,
+    ) => {
+      setValues(newValues);
+      setErrors(newErrors);
+      setIsValid(newIsValid);
+    },
+    [setValues, setErrors, setIsValid],
+  );
+
+
+  function getUser() {
+    mainApi
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
 
   function handleSignIn(e) {
-      e.preventDefault();
+    //   e.preventDefault();
+    // mainApi
+    //   .authorize(values.email, values.password)
+    //   .then(() => {
+    //     handleCheckToken();
+    //     history.push("/");
+    //     closeAllPopups();  
+    //   })
+    //   .catch(res => {
+    //     console.log(res.status);
+    //     if (res.status === 400) {
+    //       console.log("A field was completed incorrectly");
+    //     }
+    //     if (res.status === 401) {
+    //       console.log("user email not found");
+    //     }
+    //   });
+
+    e.preventDefault();
     mainApi
       .authorize(values.email, values.password)
+      .then(res => {
+        if (res.message === 'Authorization required') {
+          console.log(res);
+          setWrongEmailOrPasswordMessage(true);
+          return Promise.reject(`Error! ${res.message}`);
+        }
+        localStorage.setItem('jwt', res.token);
+
+        getUser();
+      })
       .then(() => {
+        closeAllPopups();
+       setWrongEmailOrPasswordMessage(false);
+        resetForm();
         handleCheckToken();
-      
-        history.push("/");
-        closeAllPopups();  
+        window.location.reload();
       })
       .catch(res => {
         if (res === 400) {
-          console.log("A field was completed incorrectly");
+          console.log('one of the fields was filled in in correctly')
         }
         if (res === 401) {
-          console.log("user email not found");
+          console.log('user email not found')
         }
-      });
+      })
   }
 
 
@@ -120,6 +221,7 @@ function handleSigninClick() {
 function handleRegisterLinkClick() {
     setRegisterPopupOpen(true);
     setLoginPopupOpen(false);
+    setWrongEmailOrPasswordMessage(false);
   }
   function handleMobileClick() {
     setMobileNavOpen(true);
@@ -145,6 +247,7 @@ setIsMobile(screenWidth < 768);
       <div className="page">
          <CurrentUserContext.Provider value={currentUser}>  
        <Header 
+       values={values}
        loggedin={Loggedin}
        savedNewsLocation={savedNewsLocation}
        onSigninClick={handleSigninClick}
@@ -158,6 +261,7 @@ setIsMobile(screenWidth < 768);
          <Switch> 
           <Route exact path='/'>
             <Main
+        
             />
           </Route>
             <ProtectedRoute
@@ -178,6 +282,7 @@ setIsMobile(screenWidth < 768);
           onSubmit={handleSignIn}
           handleChangeForm={handleChangeForm}
           values={values}
+          isValid={isValid}
         />
         <RegisterPopup
           onSigninClick={handleSigninClick}
@@ -186,6 +291,8 @@ setIsMobile(screenWidth < 768);
           onSubmit={handleSignup}
           handleChangeForm={handleChangeForm}
           values={values}
+          duplicateEmail={duplicateEmail}
+           isValid={isValid}
         />
         <ConfirmationPopup
         onSigninClick={handleSigninClick}

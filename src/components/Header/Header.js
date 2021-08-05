@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
   import MobileNavigation from '../MobileNavigation/MobileNavigation';
 
 function Header(props) {
- 
     return (
         (
             <header className='header'>
@@ -17,6 +16,7 @@ function Header(props) {
                         loggedin={props.loggedin}
                         onSignOut={props.onSignOut}
                         savedNewsLocation={props.savedNewsLocation}
+                        values={props.values}
                     />
                 ) : (
                     <Navigation
@@ -26,6 +26,7 @@ function Header(props) {
                         mobileMenuOpen={props.mobileMenuOpen}
                         loggedin={props.loggedin}
                         onSignOut={props.onSignOut}
+                        values={props.values}
                     />
                 )}
                 {props.mobile && (
