@@ -1,72 +1,4 @@
-// export const BASE_URL = "https://api.desinews.students.nomoreparties.site";
-
-// export const register = (email, password, username) => {
-//   return fetch(`${BASE_URL}/signup`, {
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ email, password, username })
-//   })
-//     .then(res => {
-//       if (res.status === 201 || res.status === 200) {
-//               console.log("Res received")
-//         return res.json();
-//       }
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
-
-
-
-// export const authorize = (email, password) => {
-//   return fetch(`${BASE_URL}/signin`, {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({ email, password })
-//   })
-//     .then(res => {
-     
-//       return res.json();
-//     })
-   
-//     .then(data => {
-      
-//       localStorage.setItem("token", data.token);
-//       return;
-//     })
-  
-// };
-
-
-
-
-
-
-// export const checkToken = token => {
-//   return fetch(`${BASE_URL}/users/me`, {
-//     method: "GET",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`
-
-//     }
-//   })
-//     .then(res => {
-//       return res.json();
-  
-//     })
-//     // .then(data => data){
-//     //   console.log(datea)
-//     // }
-// };
-const token = localStorage.getItem("token");;
+const token = localStorage.getItem("jwt");;
 class MainApi {
     constructor({ baseUrl, headers }) {
         this._baseUrl = baseUrl;
@@ -78,13 +10,15 @@ class MainApi {
             headers: this._headers,
         })
             .then(res => {
-              console.log(res)
                 if (res.ok) {
-                    return res.json();//this makes object out of response
+
+                    return res.json();
                 }
                 return Promise.reject(`Error: ${res.status}`)
             })
     }
+
+    
 
     // getArticles() {
     //     return fetch(this._baseUrl + "articles", {
@@ -154,6 +88,7 @@ class MainApi {
     }
 
     checkToken(token) {
+      console.log("Token is " + token)
         return fetch(this._baseUrl + 'users/me', {
             method: 'GET',
             headers: this._headers
@@ -161,6 +96,9 @@ class MainApi {
             .then(res => res.json())
             .then(data => data)
     }
+
+
+  
 }
 
 export const mainApi = new MainApi({

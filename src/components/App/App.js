@@ -22,7 +22,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [wrongEmailOrPasswordMessage, setWrongEmailOrPasswordMessage] = React.useState("")
+  const [wrongEmailOrPasswordMessage, setWrongEmailOrPasswordMessage] = React.useState(false)
   const location = useLocation();
   const history= useHistory();
  const savedNewsLocation = location.pathname === '/saved-news';
@@ -38,9 +38,15 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
     handleCheckToken();
   }, []);
 
+ React.useEffect(() => {
+    if (localStorage.getItem("token")) {
+      getUser();
+    }
+  }, []);
 
    function handleCheckToken() {
-    const jwt = localStorage.getItem("token");
+const jwt = localStorage.getItem("token");
+
   if (jwt) {
   console.log("I see the jwt")
       mainApi
@@ -92,20 +98,10 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
         resetForm();
       })
       .catch(err => console.log(err));
-  
-    // handleCheckToken();
-    //     history.push("/");
   }
 
 
-
-
-
-
-  
-
-
-  // Handle login and register form typing
+  // Handle Form Typing
   const handleChangeForm = (e) => {
     
    const { name, value } = e.target;
@@ -146,44 +142,27 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
   }
 
 
-  function handleSignIn(e) {
-    //   e.preventDefault();
-    // mainApi
-    //   .authorize(values.email, values.password)
-    //   .then(() => {
-    //     handleCheckToken();
-    //     history.push("/");
-    //     closeAllPopups();  
-    //   })
-    //   .catch(res => {
-    //     console.log(res.status);
-    //     if (res.status === 400) {
-    //       console.log("A field was completed incorrectly");
-    //     }
-    //     if (res.status === 401) {
-    //       console.log("user email not found");
-    //     }
-    //   });
-
+  function handleSignIn(e) {    
     e.preventDefault();
+    
     mainApi
       .authorize(values.email, values.password)
       .then(res => {
-        if (res.message === 'Authorization required') {
-          console.log(res);
+      
+        if (res.message === "Authorization Error") {
+console.log(res)
           setWrongEmailOrPasswordMessage(true);
           return Promise.reject(`Error! ${res.message}`);
         }
         localStorage.setItem('jwt', res.token);
-
         getUser();
       })
       .then(() => {
+         handleCheckToken();
         closeAllPopups();
-       setWrongEmailOrPasswordMessage(false);
         resetForm();
-        handleCheckToken();
-        window.location.reload();
+       
+        // window.location.reload();
       })
       .catch(res => {
         if (res === 400) {
@@ -193,6 +172,8 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
           console.log('user email not found')
         }
       })
+  
+
   }
 
 
@@ -245,7 +226,7 @@ setIsMobile(screenWidth < 768);
   return (
      <>
       <div className="page">
-         <CurrentUserContext.Provider value={currentUser}>  
+         <CurrentUserContext.Provider value={currentUser}>
        <Header 
        values={values}
        loggedin={Loggedin}
@@ -283,6 +264,7 @@ setIsMobile(screenWidth < 768);
           handleChangeForm={handleChangeForm}
           values={values}
           isValid={isValid}
+          wrongEmailOrPasswordMessage={wrongEmailOrPasswordMessage}
         />
         <RegisterPopup
           onSigninClick={handleSigninClick}
