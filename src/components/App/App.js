@@ -31,8 +31,10 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
   const [duplicateEmail, setDuplicateEmail] = React.useState(false);
+  const [preloader, setPreloader] = React.useState(false);
 
-
+const [searchTerm, setSearchTerm] = useState('');
+ console.log(searchTerm)
   React.useEffect(() => {
     //debugger;
     handleCheckToken();
@@ -46,9 +48,8 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
 
    function handleCheckToken() {
 const jwt = localStorage.getItem("token");
-
   if (jwt) {
-  console.log("I see the jwt")
+  console.log("I see the jwt " + jwt)
       mainApi
         .checkToken(jwt)
         .then(res => {
@@ -134,6 +135,7 @@ const jwt = localStorage.getItem("token");
     mainApi
       .getUserInfo()
       .then((res) => {
+        console.log(res)
         setCurrentUser(res);
       })
       .catch((err) => {
@@ -148,13 +150,14 @@ const jwt = localStorage.getItem("token");
     mainApi
       .authorize(values.email, values.password)
       .then(res => {
-      
-        if (res.message === "Authorization Error") {
-console.log(res)
+   
+        if (res.statusCode === 400) {
           setWrongEmailOrPasswordMessage(true);
           return Promise.reject(`Error! ${res.message}`);
         }
-        localStorage.setItem('jwt', res.token);
+        console.log(res)
+        localStorage.setItem('token', res.token);
+        console.log(localStorage.getItem('token'));
         getUser();
       })
       .then(() => {
@@ -162,14 +165,18 @@ console.log(res)
         closeAllPopups();
         resetForm();
        
-        // window.location.reload();
+        window.location.reload();
       })
       .catch(res => {
-        if (res === 400) {
+        if (res.statusCode === 400) {
           console.log('one of the fields was filled in in correctly')
+           setWrongEmailOrPasswordMessage(true);
+          return Promise.reject(`Error! ${res.message}`);
         }
-        if (res === 401) {
+        if (res.statusCode === 401) {
           console.log('user email not found')
+           setWrongEmailOrPasswordMessage(true);
+          return Promise.reject(`Error! ${res.message}`);
         }
       })
   
@@ -185,7 +192,7 @@ console.log(res)
     closeAllPopups();   
     window.location.reload();
   }
-
+function handleSearchSubmit(){}
 
 function closeAllPopups() {    
     setLoginPopupOpen(false);
@@ -242,7 +249,10 @@ setIsMobile(screenWidth < 768);
          <Switch> 
           <Route exact path='/'>
             <Main
-        
+            setSearchTerm={setSearchTerm}
+            loggedin={Loggedin}
+            savedNewsLocation={savedNewsLocation}
+            handleSearchSubmit={handleSearchSubmit}
             />
           </Route>
             <ProtectedRoute

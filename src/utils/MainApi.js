@@ -1,4 +1,4 @@
-const token = localStorage.getItem("jwt");;
+const token = localStorage.getItem("token");
 class MainApi {
     constructor({ baseUrl, headers }) {
         this._baseUrl = baseUrl;
@@ -11,7 +11,6 @@ class MainApi {
         })
             .then(res => {
                 if (res.ok) {
-
                     return res.json();
                 }
                 return Promise.reject(`Error: ${res.status}`)

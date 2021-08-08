@@ -1,9 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import signOut from '../../images/signout-black.svg';
 import signOutWhite from '../../images/signout-white.svg';
+import React from 'react';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 function Navigation(props) {
-
+const currentUser = React.useContext(CurrentUserContext)
     const isMobile = props.mobile ? "mobile" : "";
 // console.log(props.values)
     return (
@@ -19,7 +21,7 @@ function Navigation(props) {
                             <button onClick={props.onSignOut}
                     className={` navigation__btn navigation__text navigation__btn_${props.savedNewsLocation ? 'black' : 'null'} navigation__text_${props.savedNewsLocation ? 'black' : 'null'}`}>
                        <span className='navigation__btn-username'>
-                           {/* {props.values.username} */}
+                          {currentUser && currentUser.name}
                            </span> 
                         <img src={props.savedNewsLocation ? signOut : signOutWhite}
                         className='navigation__signout'alt='signout' />
