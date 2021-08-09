@@ -9,8 +9,10 @@ import RegisterPopup from '../RegisterPopup/RegisterPopup';
 import Footer from '../Footer/Footer';
 import './App.css'; 
 import { mainApi } from '../../utils/MainApi';
+import { newsApi } from '../../utils/NewsAPI';
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import { token } from '../../utils/constants'
 
  function App() {
  /* State Variables */
@@ -34,9 +36,20 @@ const [values, setValues] = React.useState({ email: '', password: '', username: 
   const [preloader, setPreloader] = React.useState(false);
 
 const [searchTerm, setSearchTerm] = useState('');
- console.log(searchTerm)
+const [searchErrorMsg, setSearchErrorMsg] = useState('');
+const[notFound, setNotFound] = useState(false)
+
+
+
+
+  const [results, setResults] = useState(false);
+  const [cards, setCards] = React.useState([]);
+  const [numCardsShown, setNumCardsShown] = useState(3);
+  const [savedCards, setSavedCards] = React.useState([]);
+
+
+
   React.useEffect(() => {
-    //debugger;
     handleCheckToken();
   }, []);
 
@@ -46,17 +59,28 @@ const [searchTerm, setSearchTerm] = useState('');
     }
   }, []);
 
+
+ React.useEffect(() => {
+
+    if (localStorage.getItem('savedCards') !== null && Loggedin) {
+      setSavedCards(JSON.parse(localStorage.getItem('savedCards')));
+      setResults(true);
+    }
+  }, []);
+
+
+
+
+
    function handleCheckToken() {
 const jwt = localStorage.getItem("token");
   if (jwt) {
-  console.log("I see the jwt " + jwt)
       mainApi
         .checkToken(jwt)
         .then(res => {
           if (res) {
             setLoggedin(true);
             setValues({ email: res.email, password: res.password, username: res.username });
-            console.log(res)
             history.push('/')
           }
         })
@@ -102,7 +126,7 @@ const jwt = localStorage.getItem("token");
   }
 
 
-  // Handle Form Typing
+  // Handle Form Changes
   const handleChangeForm = (e) => {
     
    const { name, value } = e.target;
@@ -129,24 +153,79 @@ const jwt = localStorage.getItem("token");
     },
     [setValues, setErrors, setIsValid],
   );
-
+function handleShowMore(){
+  setNumCardsShown(numCardsShown + 3);
+}
 
   function getUser() {
     mainApi
       .getUserInfo()
       .then((res) => {
-        console.log(res)
         setCurrentUser(res);
+        findSavedArticles(token);
       })
       .catch((err) => {
         console.log(err);
       });
   }
+function handleDeleteArticle(article) {
+    article.isSaved = false;
+    mainApi.removeArticle(article._id)
+      .then(() => {
+        const newSavedCards = savedCards.filter((c) => c._id !== article._id);
+        setSavedCards(newSavedCards);
+        const newCards = cards.map((c) => (c._id === article._id ? article : c));
+        setCards(newCards);
+        localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
+      })
+      .catch(err => console.log("Error: " + err));
+  }
+
+ 
+ function findSavedArticles(token) {
+    mainApi
+      .getArticles(token)
+      .then((res) => {
+        setSavedCards(res);
+      })
+      .catch((error) => console.log(error));
+  }
+
+
+    function handleSaveArticle(card) {
+    if (!Loggedin) {
+      return handleSigninClick();
+    } else if (card.isSaved === true) {
+     handleDeleteArticle(card);
+    }
+    else if (!savedNewsLocation && Loggedin) {
+      card.keyword = searchTerm;
+      card.source = card.source.name;
+      console.log(card)
+      mainApi.saveArticle(card)
+        .then((newCard) => {
+          newCard.isSaved = true;
+          const newCards = cards.map((c) => c === card ? newCard : c);
+          console.log(newCards)
+          const newSavedCards = [...savedCards, newCard];
+          setSavedCards(newSavedCards);
+          console.log("Saved cards are " +  savedCards)
+          setCards(newCards);
+          localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
+        })
+        .catch(err => console.log("Error: " + err));
+
+    }
+    else {
+      handleDeleteArticle(card);
+    }
+  }
 
 
   function handleSignIn(e) {    
+    if (e){
     e.preventDefault();
-    
+    }
     mainApi
       .authorize(values.email, values.password)
       .then(res => {
@@ -183,6 +262,44 @@ const jwt = localStorage.getItem("token");
 
   }
 
+function handleSearchSubmit(e) {
+    e.preventDefault();
+    setPreloader(true);
+    if (searchTerm.length === 0) {
+      setPreloader(false);
+      setSearchErrorMsg('Must enter search term');
+      return
+    }
+    newsApi.getNewsCards(searchTerm)
+      .then((data) => {
+        console.log("There are "+ data.length + " results")
+        if (data.length === 0) {
+          setNotFound(true);
+        }
+        return data;
+      })
+      .then((cards) => {
+        setNumCardsShown(3);
+        setCards(cards);
+        setResults(true);
+        setSearchTerm(searchTerm);
+        setPreloader(false);
+        setSearchErrorMsg('');
+
+      })
+      .catch(() => {
+        setSearchErrorMsg("Something went wrong with this request. Please try again later.")
+        setPreloader(false);
+      })
+
+
+
+    }
+
+
+
+
+
 
    function handleSignOut(e) {
     e.preventDefault();
@@ -192,7 +309,7 @@ const jwt = localStorage.getItem("token");
     closeAllPopups();   
     window.location.reload();
   }
-function handleSearchSubmit(){}
+
 
 function closeAllPopups() {    
     setLoginPopupOpen(false);
@@ -236,7 +353,7 @@ setIsMobile(screenWidth < 768);
          <CurrentUserContext.Provider value={currentUser}>
        <Header 
        values={values}
-       loggedin={Loggedin}
+       Loggedin={Loggedin}
        savedNewsLocation={savedNewsLocation}
        onSigninClick={handleSigninClick}
        onSignOut={handleSignOut}
@@ -250,17 +367,34 @@ setIsMobile(screenWidth < 768);
           <Route exact path='/'>
             <Main
             setSearchTerm={setSearchTerm}
-            loggedin={Loggedin}
+            Loggedin={Loggedin}
             savedNewsLocation={savedNewsLocation}
             handleSearchSubmit={handleSearchSubmit}
+            setSearchErrorMsg={setSearchErrorMsg}
+                searchTerm={searchTerm}
+                preloader={preloader}
+                notFound={notFound}
+                results={results}
+                cards={cards}
+                handleShowMore={handleShowMore}handleSave
+                numCardsShown={numCardsShown}
+                 handleSaveArticle={(card) => { handleSaveArticle(card) }}
+            
+            
+            
             />
           </Route>
             <ProtectedRoute
               exact path='/saved-news'
               component={SavedNews}
-              loggedin={Loggedin}
+              Loggedin={Loggedin}
+              cards={cards}
+              searchTerm={searchTerm}
+              savedCards={savedCards}
               savedNewsLocation={savedNewsLocation}
               currentUser={currentUser}
+              handleSaveArticle={(card) => { handleSaveArticle(card) }}
+              handleDeleteArticle={(card) => { handleDeleteArticle(card) }}
             />
         </Switch>
 

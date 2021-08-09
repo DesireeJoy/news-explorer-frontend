@@ -8,24 +8,31 @@ class NewsApi {
     this._apiKey = apiKey;
   }
   
- getNewsCards(request) {
+ getNewsCards(searchTerm) {
         const date = new Date();
         const thisDate = date.toISOString();
         const pastDate = new Date(date.getTime() - (60 * 60 * 24 * 7 * 1000));
-        const oneWeekAgo = pastDate.toISOString();
+        const fromDate = pastDate.toISOString();
 
 
-        return fetch(`${this._baseUrl}?q=${request}&from=${oneWeekAgo}&to=${thisDate}&sortBy=relevancy&pageSize=100&apiKey=${this._apiKey}`
-        )
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return Promise.reject(new Error(res.status));
-            })
-            .then(res => res.articles);
+       return fetch(`${this._baseUrl}?q=${searchTerm}&from=${fromDate}&to=${thisDate}&sortBy=relevancy&apiKey=${this._apiKey}`)
+
+      .then((res) =>{
+        if (res.ok){
+          return res.json();
+        }
+        return Promise.reject(new Error(res.status));
+      })
+      .then(res => res.articles);
+
     }
 }
 
 
-export default NewsApi;
+
+export const newsApi = new NewsApi({
+    baseUrl: 'https://nomoreparties.co/news/v2/everything',
+    headers: { 'Content-Type': 'application/json' },
+    'Content-Type': 'application/json',
+        'Accept': 'application/json'
+});

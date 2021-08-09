@@ -15,7 +15,7 @@ function MobileNavigation(props) {
                     <Navigation
                         onSigninClick={props.onSigninClick}
                         mobile={props.mobile}
-                        loggedin={props.loggedin}
+                        Loggedin={props.Loggedin}
                         onSignOut={props.onSignOut}
                     />
 

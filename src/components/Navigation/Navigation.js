@@ -13,11 +13,11 @@ const currentUser = React.useContext(CurrentUserContext)
              <nav className={`navigation_${isMobile} navigation`}>
                 <NavLink className={`navigation__text navigation__text_home navigation__text_${props.savedNewsLocation ? 'black' : 'null'}`} activeClassName='navigation__text_active' exact to='/'>Home</NavLink>
    
-                {props.loggedin ?
+                {props.Loggedin ?
                     (<NavLink className={`navigation__text navigation__text_saved navigation__text_${props.savedNewsLocation ? 'black' : 'null'}`} activeClassName='navigation__text_active navigation__text_active-black' exact to='/saved-news'>
                         Saved articles</NavLink>) : null}
                         
-                    {props.loggedin ? (
+                    {props.Loggedin ? (
                             <button onClick={props.onSignOut}
                     className={` navigation__btn navigation__text navigation__btn_${props.savedNewsLocation ? 'black' : 'null'} navigation__text_${props.savedNewsLocation ? 'black' : 'null'}`}>
                        <span className='navigation__btn-username'>
