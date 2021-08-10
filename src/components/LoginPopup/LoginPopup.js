@@ -19,7 +19,7 @@ function LoginPopup(props) {
                     <label className='login__label'>Password</label>
                     <input className="login__input" placeholder="Enter password" name="password" type="password" required value={props.values.password} onChange={props.handleChangeForm} />
                  <span className='login__error'>{props.wrongEmailOrPasswordMessage && 'Wrong Email or Password'}</span>
-                    <button type="submit" className={props.isValid ? "login__btn" : "login__btn_disabled"} aria-label="Sign in" onClick={props.onSubmit}>Sign in</button>
+                    <button type="submit" disabled={!props.isValid} className={props.isValid ? "login__btn" : "login__btn_disabled"} aria-label="Sign in" onClick={props.onSubmit}>Sign in</button>
                    
                     <div className="login__signup">
                         <p className='login__extraText'>or
