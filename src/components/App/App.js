@@ -80,8 +80,8 @@ setIsMobile(screenWidth < 768);
 //Article Stuff
 function handleDeleteArticle(article) {
     article.isSaved = false;
-    console.log("Saved cards befre " + savedCards)
-    mainApi.removeArticle(article._id)
+    console.log("Saved cards before " + savedCards)
+    mainApi.deleteArticle(article._id)
       .then(() => {
         const newSavedCards = savedCards.filter((c) => c._id !== article._id);
         setSavedCards(newSavedCards);

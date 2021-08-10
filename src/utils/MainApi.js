@@ -51,7 +51,7 @@ class MainApi {
 
 
 
-    removeArticle(articleId) {
+    deleteArticle(articleId) {
         return fetch(this._baseUrl + 'articles/' + articleId, {
             method: "DELETE",
             headers: this._headers
