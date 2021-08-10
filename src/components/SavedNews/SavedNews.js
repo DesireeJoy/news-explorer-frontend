@@ -14,7 +14,8 @@ function SavedNews(props){
                         cards={props.savedCards}
                         Loggedin={props.Loggedin}
                         savedNewsLocation={props.savedNewsLocation}
-                        handleSaveArticle={props.handleSaveArticle} />
+                        handleSaveArticle={props.handleSaveArticle} 
+                        />
                 </div>
                 </div>
             </section>

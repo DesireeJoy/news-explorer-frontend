@@ -61,7 +61,6 @@ const[notFound, setNotFound] = useState(false)
 
 
  React.useEffect(() => {
-
     if (localStorage.getItem('savedCards') !== null && Loggedin) {
       setSavedCards(JSON.parse(localStorage.getItem('savedCards')));
       setResults(true);
@@ -177,6 +176,7 @@ function handleDeleteArticle(article) {
         const newCards = cards.map((c) => (c._id === article._id ? article : c));
         setCards(newCards);
         localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
+        
       })
       .catch(err => console.log("Error: " + err));
   }
@@ -291,8 +291,6 @@ function handleSearchSubmit(e) {
         setSearchErrorMsg("Something went wrong with this request. Please try again later.")
         setPreloader(false);
       })
-
-
 
     }
 
