@@ -259,7 +259,6 @@ function handleCheckToken() {
    
 
   const handleChangeForm = (e) => {
-    console.log(wrongEmailOrPasswordMessage)
    const { name, value } = e.target;
     const newValues = {
       ...values,
@@ -269,6 +268,7 @@ function handleCheckToken() {
     setValues(newValues);
     fieldValidation(newValues);
     setErrors({ ...errors, [name]: errors[name] });
+    setWrongEmailOrPasswordMessage(false);
     setIsValid(e.target.closest('form').checkValidity());
   };
 
