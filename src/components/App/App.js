@@ -43,7 +43,7 @@ const[notFound, setNotFound] = useState(false)
   const [cards, setCards] = React.useState([]);
   const [numCardsShown, setNumCardsShown] = useState(3);
   const [savedCards, setSavedCards] = React.useState([]);
-
+console.log("errors are " + errors)
 // Use Effects
 
   React.useEffect(() => {
@@ -117,6 +117,7 @@ function handleDeleteArticle(article) {
         .then((newCard) => {
           newCard.isSaved = true;
           const newCards = cards.map((c) => c === card ? newCard : c);
+
           const newSavedCards = [...savedCards, newCard];
           setSavedCards(newSavedCards);
           setCards(newCards);
@@ -203,7 +204,7 @@ function handleCheckToken() {
       })
       .catch(res => {
         if (res.statusCode === 400) {
-          console.log('one of the fields was filled in in correctly')
+          console.log('one of the fields was filled in incorrectly')
            setWrongEmailOrPasswordMessage(true);
           return Promise.reject(`Error! ${res.message}`);
         }
@@ -255,13 +256,16 @@ function handleCheckToken() {
 
   }
 
+   
+
   const handleChangeForm = (e) => {
-    
+    console.log(wrongEmailOrPasswordMessage)
    const { name, value } = e.target;
     const newValues = {
       ...values,
       [name]: value,
     };
+    console.log(newValues)
     setValues(newValues);
     fieldValidation(newValues);
     setErrors({ ...errors, [name]: errors[name] });
@@ -400,6 +404,7 @@ function handleRegisterLinkClick() {
               savedCards={savedCards}
               savedNewsLocation={savedNewsLocation}
               currentUser={currentUser}
+              handleSigninClick={handleSigninClick}
               handleSaveArticle={(card) => { handleSaveArticle(card) }}
               handleDeleteArticle={(card) => { handleDeleteArticle(card) }}
             />
