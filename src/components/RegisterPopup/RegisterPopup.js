@@ -20,7 +20,7 @@ function RegisterPopup(props) {
                     <input className="login__input" placeholder="Enter password" name="password" type="password" required value={props.values.password} onChange={props
                         .handleChangeForm} />
                     <label className='login__label'>Username</label>
-                    <input className="login__input" placeholder="Enter your username" name="username" type="text" required value={props.values.username} onChange={props.handleChangeForm} />
+                    <input className="login__input" placeholder="Enter your username" name="name" type="text" required value={props.values.name} onChange={props.handleChangeForm} />
                     <span className='login__error'>{props.duplicateEmail && 'Duplicate email'}</span>
                     <button type="submit"   className="login__btn">Sign up</button>
 

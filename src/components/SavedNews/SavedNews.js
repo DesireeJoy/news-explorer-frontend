@@ -1,7 +1,7 @@
 import SavedNewsHeader from "../SavedNewsHeader/SavedNewsHeader";
 import NewsCardList from "../NewsCardList/NewsCardList";
 function SavedNews(props){
-    
+
     return(
         (
             <section className='savedNews-main'>               

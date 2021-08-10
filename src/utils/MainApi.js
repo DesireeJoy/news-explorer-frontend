@@ -52,7 +52,6 @@ class MainApi {
 
 
     removeArticle(articleId) {
-      
         return fetch(this._baseUrl + 'articles/' + articleId, {
             method: "DELETE",
             headers: this._headers
@@ -65,17 +64,20 @@ class MainApi {
             })
     }
 
-    register(email, password, username) {
+    register(email, password, name) {
         return fetch(this._baseUrl + 'signup', {
             method: 'POST',
             headers: this._headers,
-            body: JSON.stringify({ email, password, username })
+            body: JSON.stringify({ email, password, name })
         })
             .then((res) => {
                     return res.json();
            
             })
     }
+
+
+    
 
     authorize(email, password) {
         return fetch(this._baseUrl + 'signin', {

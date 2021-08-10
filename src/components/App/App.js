@@ -28,7 +28,7 @@ import { token } from '../../utils/constants'
   const location = useLocation();
   const history= useHistory();
  const savedNewsLocation = location.pathname === '/saved-news';
-const [values, setValues] = React.useState({ email: '', password: '', username: '' });
+const [values, setValues] = React.useState({ email: '', password: '', name: '' });
 
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
@@ -39,28 +39,37 @@ const [searchTerm, setSearchTerm] = useState('');
 const [searchErrorMsg, setSearchErrorMsg] = useState('');
 const[notFound, setNotFound] = useState(false)
 
-
-
-
   const [results, setResults] = useState(false);
   const [cards, setCards] = React.useState([]);
   const [numCardsShown, setNumCardsShown] = useState(3);
   const [savedCards, setSavedCards] = React.useState([]);
 
-
+// Use Effects
 
   React.useEffect(() => {
     handleCheckToken();
   }, []);
 
+//Get Username and such
  React.useEffect(() => {
     if (localStorage.getItem("token")) {
       getUser();
     }
   }, []);
 
+    React.useEffect(() => {
+    const handleScreenSizeChange = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleScreenSizeChange);
 
- React.useEffect(() => {
+setIsMobile(screenWidth < 768);
+
+    return () => window.removeEventListener("resize", handleScreenSizeChange);
+  }, [screenWidth]);
+
+
+//Get Saved Cards and put them on the server
+  React.useEffect(() => {
+
     if (localStorage.getItem('savedCards') !== null && Loggedin) {
       setSavedCards(JSON.parse(localStorage.getItem('savedCards')));
       setResults(true);
@@ -68,111 +77,15 @@ const[notFound, setNotFound] = useState(false)
   }, []);
 
 
-
-
-
-   function handleCheckToken() {
-const jwt = localStorage.getItem("token");
-  if (jwt) {
-      mainApi
-        .checkToken(jwt)
-        .then(res => {
-          if (res) {
-            setLoggedin(true);
-            setValues({ email: res.email, password: res.password, username: res.username });
-            history.push('/')
-          }
-        })
-        .catch(err => {
-          console.log("Err: " + err);
-        });
-    }
-  
-  }
-
-
- function fieldValidation() {
-    const validEmailRegex = RegExp(
-      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/i
-    );
-    setErrors((origErrors) => ({
-      ...origErrors,
-      email: validEmailRegex.test(values.email) ? "" : "Invalid email address",
-    }));
-
-  }
-
-  function handleSignup(e){ 
-    e.preventDefault();
-    mainApi.register(values.email, values.password, values.username)
-    .then((res) =>{
-
-       if (res.message === 'Duplicate User') {      
-         setDuplicateEmail(true)    
-          return Promise.reject(`Error! ${res.message}`);
-        }
-        if (res.ok){
-      return res.json();
-        }
-    })
-    .then(() => {
-        setConfirmationPopupOpen(true);
-        setRegisterPopupOpen(false);
-        setDuplicateEmail(false)       
-        resetForm();
-      })
-      .catch(err => console.log(err));
-  }
-
-
-  // Handle Form Changes
-  const handleChangeForm = (e) => {
-    
-   const { name, value } = e.target;
-
-    const newValues = {
-      ...values,
-      [name]: value,
-    };
-    setValues(newValues);
-    fieldValidation(newValues);
-    setErrors({ ...errors, [name]: errors[name] });
-    setIsValid(e.target.closest('form').checkValidity());
-  };
-
-  const resetForm = useCallback(
-    (
-      newValues = { email: '', password: '', username: '' },
-      newErrors = { email: '', password: '', username: '' },
-      newIsValid = false,
-    ) => {
-      setValues(newValues);
-      setErrors(newErrors);
-      setIsValid(newIsValid);
-    },
-    [setValues, setErrors, setIsValid],
-  );
-function handleShowMore(){
-  setNumCardsShown(numCardsShown + 3);
-}
-
-  function getUser() {
-    mainApi
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-        findSavedArticles(token);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+//Article Stuff
 function handleDeleteArticle(article) {
     article.isSaved = false;
+    console.log("Saved cards befre " + savedCards)
     mainApi.removeArticle(article._id)
       .then(() => {
         const newSavedCards = savedCards.filter((c) => c._id !== article._id);
         setSavedCards(newSavedCards);
+           console.log("Saved cards after " + savedCards)
         const newCards = cards.map((c) => (c._id === article._id ? article : c));
         setCards(newCards);
         localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
@@ -201,7 +114,6 @@ function handleDeleteArticle(article) {
     else if (!savedNewsLocation && Loggedin) {
       card.keyword = searchTerm;
       card.source = card.source.name;
-      console.log(card)
       mainApi.saveArticle(card)
         .then((newCard) => {
           newCard.isSaved = true;
@@ -222,10 +134,56 @@ function handleDeleteArticle(article) {
   }
 
 
+//SignIn / Singup Stuff (Minus Click Events)
+
+function handleCheckToken() {
+  const jwt = localStorage.getItem("token");
+  if (jwt) {
+      mainApi
+        .checkToken(jwt)
+        .then(res => {
+          if (res) {
+            setLoggedin(true);
+            setValues({ email: res.email, password: res.password, name: res.name });
+            history.push('/')
+          }
+        })
+        .catch(err => {
+          console.log("Err: " + err);
+        });
+    }
+  
+  }
+
+
+  function handleSignup(e){ 
+    e.preventDefault();
+    console.log("These Values are correct heading to the mainApi" + values.name)
+    mainApi.register(values.email, values.password, values.name)
+    .then((res) =>{
+       if (res.message === 'Duplicate User') {      
+         setDuplicateEmail(true)    
+          return Promise.reject(`Error! ${res.message}`);
+        }
+        if (res.ok){
+      return res.json();
+        }
+    })
+    .then(() => {
+        setConfirmationPopupOpen(true);
+        setRegisterPopupOpen(false);
+        setDuplicateEmail(false)       
+        resetForm();
+      })
+      .catch(err => console.log(err));
+  }
+
+
   function handleSignIn(e) {    
     if (e){
     e.preventDefault();
     }
+    e.preventDefault();
     mainApi
       .authorize(values.email, values.password)
       .then(res => {
@@ -262,6 +220,78 @@ function handleDeleteArticle(article) {
 
   }
 
+
+   function handleSignOut(e) {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    setLoggedin(false);   
+    history.push('/');
+    closeAllPopups();   
+    window.location.reload();
+  }
+
+
+//More User Stuff
+
+  function getUser() {
+    mainApi
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+        
+        findSavedArticles(token);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  //Form Stuff
+ function fieldValidation() {
+    const validEmailRegex = RegExp(
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/i
+    );
+    setErrors((origErrors) => ({
+      ...origErrors,
+      email: validEmailRegex.test(values.email) ? "" : "Invalid email address",
+    }));
+
+  }
+
+  const handleChangeForm = (e) => {
+    
+   const { name, value } = e.target;
+    const newValues = {
+      ...values,
+      [name]: value,
+    };
+    setValues(newValues);
+    fieldValidation(newValues);
+    setErrors({ ...errors, [name]: errors[name] });
+    setIsValid(e.target.closest('form').checkValidity());
+  };
+
+  const resetForm = useCallback(
+    (
+      newValues = { email: '', password: '', name: '' },
+      newErrors = { email: '', password: '', name: '' },
+      newIsValid = false,
+    ) => {
+      setValues(newValues);
+      setErrors(newErrors);
+      setIsValid(newIsValid);
+    },
+    [setValues, setErrors, setIsValid],
+  );
+function handleShowMore(){
+  setNumCardsShown(numCardsShown + 3);
+}
+
+
+
+
+//Search Stuff
+
 function handleSearchSubmit(e) {
     e.preventDefault();
     setPreloader(true);
@@ -294,27 +324,23 @@ function handleSearchSubmit(e) {
 
     }
 
-
-
-
-
-
-   function handleSignOut(e) {
-    e.preventDefault();
-    localStorage.removeItem('token');
-    setLoggedin(false);   
-    history.push('/');
-    closeAllPopups();   
-    window.location.reload();
-  }
-
-
+//Popups
 function closeAllPopups() {    
     setLoginPopupOpen(false);
     setRegisterPopupOpen(false);
     setMobileNavOpen(false);
     setConfirmationPopupOpen(false);
   }
+  function handleMobileClick() {
+    setMobileNavOpen(true);
+  }
+
+function handleMobileClose() {
+    setMobileNavOpen(false);
+    }
+//Click Events
+
+
 function handleSigninClick() {    
     setLoginPopupOpen(true);
     setRegisterPopupOpen(false);
@@ -326,22 +352,8 @@ function handleRegisterLinkClick() {
     setLoginPopupOpen(false);
     setWrongEmailOrPasswordMessage(false);
   }
-  function handleMobileClick() {
-    setMobileNavOpen(true);
-  }
 
-function handleMobileClose() {
-    setMobileNavOpen(false);
-    }
   
-  React.useEffect(() => {
-    const handleScreenSizeChange = () => setScreenWidth(window.innerWidth);
-    window.addEventListener("resize", handleScreenSizeChange);
-
-setIsMobile(screenWidth < 768);
-
-    return () => window.removeEventListener("resize", handleScreenSizeChange);
-  }, [screenWidth]);
 
 
 
@@ -378,7 +390,7 @@ setIsMobile(screenWidth < 768);
                 numCardsShown={numCardsShown}
                  handleSaveArticle={(card) => { handleSaveArticle(card) }}
             
-            
+            currentUser={currentUser}
             
             />
           </Route>

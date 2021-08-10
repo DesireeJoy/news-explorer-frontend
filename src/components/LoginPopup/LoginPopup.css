@@ -22,7 +22,10 @@
   min-width: 358px;
   margin: 10px 0px 10px 36px;
   height: 33px;
-  padding: 0;
+  padding: 5px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
 }
 
 .login__error {

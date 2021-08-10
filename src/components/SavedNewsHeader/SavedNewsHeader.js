@@ -1,4 +1,5 @@
 function SavedNewsHeader(props){
+   
     function getKeywordList(){
  const savedKeywords = [
           ...new Set(props.cards.map(({ keyword }) => keyword)),
@@ -10,6 +11,7 @@ function SavedNewsHeader(props){
           ? `${first}, ${second}, and ${length - 2} others`
           : savedKeywords.join(', ');
       }
+      
     return(
         (
             <section className='savedNews'>
