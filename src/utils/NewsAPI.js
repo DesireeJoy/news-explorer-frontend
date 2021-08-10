@@ -9,9 +9,10 @@ class NewsApi {
   }
   
  getNewsCards(searchTerm) {
+   const timeFrame = 60 * 60 * 24 * 7 * 1000;
         const date = new Date();
         const thisDate = date.toISOString();
-        const pastDate = new Date(date.getTime() - (60 * 60 * 24 * 7 * 1000));
+        const pastDate = new Date(date.getTime() - timeFrame);
         const fromDate = pastDate.toISOString();
 
 

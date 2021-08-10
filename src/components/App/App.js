@@ -303,7 +303,6 @@ function handleSearchSubmit(e) {
     }
     newsApi.getNewsCards(searchTerm)
       .then((data) => {
-        console.log("There are "+ data.length + " results")
         if (data.length === 0) {
           setNotFound(true);
         }
