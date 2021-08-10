@@ -375,7 +375,20 @@ function handleRegisterLinkClick() {
        />
 
          <Switch> 
-          <Route exact path='/'>
+           <ProtectedRoute
+              exact path='/saved-news'
+              component={SavedNews}
+              Loggedin={Loggedin}
+              cards={cards}
+              searchTerm={searchTerm}
+              savedCards={savedCards}
+              savedNewsLocation={savedNewsLocation}
+              currentUser={currentUser}
+              handleSigninClick={handleSigninClick}
+              handleSaveArticle={(card) => { handleSaveArticle(card) }}
+              handleDeleteArticle={(card) => { handleDeleteArticle(card) }}
+            />
+          <Route path='/'>
             <Main
             setSearchTerm={setSearchTerm}
             Loggedin={Loggedin}
@@ -395,19 +408,7 @@ function handleRegisterLinkClick() {
             
             />
           </Route>
-            <ProtectedRoute
-              exact path='/saved-news'
-              component={SavedNews}
-              Loggedin={Loggedin}
-              cards={cards}
-              searchTerm={searchTerm}
-              savedCards={savedCards}
-              savedNewsLocation={savedNewsLocation}
-              currentUser={currentUser}
-              handleSigninClick={handleSigninClick}
-              handleSaveArticle={(card) => { handleSaveArticle(card) }}
-              handleDeleteArticle={(card) => { handleDeleteArticle(card) }}
-            />
+            
         </Switch>
 
 

@@ -2,7 +2,9 @@ import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
 const ProtectedRoute = ({ component: Component, ...props  }) => {
-  props.handleSigninClick();
+  if (!props.Loggedin){
+    props.handleSigninClick();
+  }
   return (
     <Route>
       {
