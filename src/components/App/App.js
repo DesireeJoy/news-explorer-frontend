@@ -80,12 +80,11 @@ setIsMobile(screenWidth < 768);
 //Article Stuff
 function handleDeleteArticle(article) {
     article.isSaved = false;
-    console.log("Saved cards before " + savedCards)
     mainApi.deleteArticle(article._id)
       .then(() => {
         const newSavedCards = savedCards.filter((c) => c._id !== article._id);
         setSavedCards(newSavedCards);
-           console.log("Saved cards after " + savedCards)
+        
         const newCards = cards.map((c) => (c._id === article._id ? article : c));
         setCards(newCards);
         localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
@@ -118,10 +117,8 @@ function handleDeleteArticle(article) {
         .then((newCard) => {
           newCard.isSaved = true;
           const newCards = cards.map((c) => c === card ? newCard : c);
-          console.log(newCards)
           const newSavedCards = [...savedCards, newCard];
           setSavedCards(newSavedCards);
-          console.log("Saved cards are " +  savedCards)
           setCards(newCards);
           localStorage.setItem('savedCards', JSON.stringify(newSavedCards));
         })

@@ -58,11 +58,23 @@ class MainApi {
         })
             .then(res => {
                 if (res.ok) {
-                    return res.json();//this makes object out of response
+                    return res.json();
                 }
                 return Promise.reject(`Error: ${res.status}`)
             })
-    }
+            // .then(async res => {
+            //     try {
+            //     const data = await res.json();
+            //     console.log('response data?', data)
+            //     }
+            //     catch(error){
+            //         console.log('Error Happened')
+            //         console.log(error)
+            //     }
+            // }
+            // )
+        } 
+    
 
     register(email, password, name) {
         return fetch(this._baseUrl + 'signup', {
