@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.dd10017d.chunk.css",
+    "main.js": "/static/js/main.98ef8a8a.chunk.js",
+    "main.js.map": "/static/js/main.98ef8a8a.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a8b455d7.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a8b455d7.js.map",
+    "static/js/2.bcd1d937.chunk.js": "/static/js/2.bcd1d937.chunk.js",
+    "static/js/2.bcd1d937.chunk.js.map": "/static/js/2.bcd1d937.chunk.js.map",
+    "static/js/3.3042f0ce.chunk.js": "/static/js/3.3042f0ce.chunk.js",
+    "static/js/3.3042f0ce.chunk.js.map": "/static/js/3.3042f0ce.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.dd10017d.chunk.css.map": "/static/css/main.dd10017d.chunk.css.map",
+    "static/js/2.bcd1d937.chunk.js.LICENSE.txt": "/static/js/2.bcd1d937.chunk.js.LICENSE.txt",
+    "static/media/Desi.a1c603f6.png": "/static/media/Desi.a1c603f6.png",
+    "static/media/App.css": "/static/media/background-page.125f97ea.png",
+    "static/media/index.css": "/static/media/trash.b9abe9fb.svg",
+    "static/media/facebook.81b5c6db.svg": "/static/media/facebook.81b5c6db.svg",
+    "static/media/github.94b724e8.svg": "/static/media/github.94b724e8.svg",
+    "static/media/not-found.5661906d.svg": "/static/media/not-found.5661906d.svg",
+    "static/media/signout-black.e6943779.svg": "/static/media/signout-black.e6943779.svg",
+    "static/media/signout-white.96d43996.svg": "/static/media/signout-white.96d43996.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a8b455d7.js",
+    "static/js/2.bcd1d937.chunk.js",
+    "static/css/main.dd10017d.chunk.css",
+    "static/js/main.98ef8a8a.chunk.js"
+  ]
+}
