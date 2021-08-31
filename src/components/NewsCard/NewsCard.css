@@ -49,7 +49,6 @@
   border: none;
   background-color: #fff;
   background-repeat: no-repeat;
-  background-size: 14px 19px;
   background-position: center;
 }
 
@@ -115,6 +114,9 @@
   margin: 0 24px 16px;
   text-overflow: ellipsis;
   overflow: hidden;
+  text-align: left;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .card__description {
