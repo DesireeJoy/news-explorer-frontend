@@ -3,7 +3,6 @@ import About from '../About/About'
 import NewsCardList from '../NewsCardList/NewsCardList'
 import NotFound from '../NotFound/Notfound'
 import Preloader from '../Preloader/Preloader'
-import CurrentUserContext from "../../contexts/CurrentUserContext";
 import React from "react";
 
 function Main(props) {
@@ -14,7 +13,7 @@ function Main(props) {
                         <h1 className='main__heading'>What's going on in the world?</h1>
                         <p className='main__subheading'>Find the latest news on any topic and save them in your personal account.</p>
                     </div>
-                    <SearchForm handleSearchSubmit={props.handleSearchSubmit} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>
+                    <SearchForm errorMessage={props.searchErrorMsg} handleSearchSubmit={props.handleSearchSubmit} searchTerm={props.searchTerm} setSearchTerm={props.setSearchTerm}/>
                 </div>
                 {props.preloader && <Preloader />}
   {props.notFound && <NotFound /> }

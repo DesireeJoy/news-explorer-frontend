@@ -36,7 +36,7 @@ const [values, setValues] = React.useState({ email: '', password: '', name: '' }
   const [preloader, setPreloader] = React.useState(false);
 
 const [searchTerm, setSearchTerm] = useState('');
-// const [searchErrorMsg, setSearchErrorMsg] = useState('');
+const [searchErrorMsg, setSearchErrorMsg] = useState('');
 const[notFound, setNotFound] = useState(false)
 
   const [results, setResults] = useState(false);
@@ -394,6 +394,7 @@ function handleRegisterLinkClick() {
             savedNewsLocation={savedNewsLocation}
             handleSearchSubmit={handleSearchSubmit}
             setSearchErrorMsg={setSearchErrorMsg}
+            searchErrorMsg={searchErrorMsg}
                 searchTerm={searchTerm}
                 preloader={preloader}
                 notFound={notFound}
