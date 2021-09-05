@@ -117,7 +117,7 @@ class MainApi {
 
 export const mainApi = new MainApi({
     // baseUrl: 'https://api.desinews.students.nomoreparties.site/',
-    baseUrl: 'http://34.125.192.74:3000/',
+    baseUrl: 'https://34.125.192.74:3000/',
     headers: {
       'Accept': "application/json",
     'Content-Type': 'application/json',
