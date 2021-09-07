@@ -1,9 +1,4 @@
 
-[[redirects]]
-  from = "https://desinews.netlify.app/*"
-  to = "https://desinews.netlify.app/"
-  status = 301
-  force = true
 
   [build]
   publish = "build"
