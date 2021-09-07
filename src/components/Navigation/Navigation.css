@@ -91,6 +91,9 @@
 }
 
 @media screen and (max-width: 768) {
+  .navigation {
+    width: 100%;
+  }
   .navigation_mobile {
     height: auto;
     flex-direction: row;
