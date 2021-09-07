@@ -1,10 +1,5 @@
 
-[redirects]
-  from = "/*"
-  to = "/"
-  status = 200
-  status = 301
-  force = true
+
 
   [build]
   publish = "build"
