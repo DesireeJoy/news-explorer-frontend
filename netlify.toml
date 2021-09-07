@@ -1,8 +1,10 @@
 
-  # A redirect rule with many of the supported properties
 [[redirects]]
-  from = "/*"
-  to = "/"
+  from = "https://desinews.netlify.app/*"
+  to = "https://desinews.netlify.app/"
+  status = 301
+  force = true
 
-  # The default HTTP status code is 301, but you can define a different one.
-  status = 302
+  [build]
+  publish = "build"
+  command = "npm build"
