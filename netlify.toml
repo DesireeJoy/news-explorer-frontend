@@ -1,0 +1,11 @@
+/* /404.html 404
+##Shows a custom 404 page
+ 
+
+  # A redirect rule with many of the supported properties
+[[redirects]]
+  from = "/*"
+  to = "/"
+
+  # The default HTTP status code is 301, but you can define a different one.
+  status = 302
