@@ -98,6 +98,7 @@ class MainApi {
             headers: this._headers,
             body: JSON.stringify({ email, password })
         })
+        .then(res => { console.log(res)})
             .then(res => {
                 return res.json()
             })
