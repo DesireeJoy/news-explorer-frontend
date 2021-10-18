@@ -182,6 +182,7 @@ function handleCheckToken() {
     e.preventDefault();
     }
     e.preventDefault();
+  console.log(`submited ${values.email} + " and " ${values.password}`)
     mainApi
       .authorize(values.email, values.password)
       .then(res => {
