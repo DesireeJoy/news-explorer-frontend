@@ -1,4 +1,5 @@
 const token = localStorage.getItem("token");
+console.log(`token is ${token}`)
 class MainApi {
     constructor({ baseUrl, headers }) {
         this._baseUrl = baseUrl;
