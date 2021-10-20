@@ -6,13 +6,13 @@
   command = "npm run build"
 
   [[redirects]]
-  from = “/saved-news”
-  to = /” 
+  from = "/saved-news"
+  to = "/"
   status = 200
   force = true
 
   [[redirects]]
-  from = “/api/”
-  to = “https://newsexplorer-api.herokuapp.com/”
+  from = "/api/"
+  to = "https://newsexplorer-api.herokuapp.com/"
   status = 200
   force = true
