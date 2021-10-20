@@ -4,3 +4,8 @@
   [build]
   publish = "build"
   command = "npm run build"
+[[redirects]]
+  from = “/api/*”
+  to = “https://newsexplorer-api.herokuapp.com/”
+  status = 200
+  force = true
