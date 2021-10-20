@@ -12,7 +12,7 @@
   force = true
 
   [[redirects]]
-  from = "/api/"
+  from = "/api/*"
   to = "https://newsexplorer-api.herokuapp.com/"
   status = 200
   force = true
