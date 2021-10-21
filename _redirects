@@ -1,4 +1,4 @@
   
-  /api/* https://newsexplorer-api.herokuapp.com/:splat 200
-  /saved-news / 200
+/api/* https://domain.herokuapp.com/:splat 200 
+/* /index.html 200
   
