@@ -1,7 +1,4 @@
-
-
-
-  [build]
+[build]
   publish = "build"
   command = "npm run build"
 
@@ -12,12 +9,6 @@
   force = true
 
   [[redirects]]
-  from = "/signin"
-  to = "https://newsexplorer-api.herokuapp.com/signin"
-  status = 200
-  force = true
-
-    [[redirects]]
   from = "/signin"
   to = "https://newsexplorer-api.herokuapp.com/signin"
   status = 200
