@@ -2,24 +2,3 @@
   publish = "build"
   command = "npm run build"
 
-  [[redirects]]
-  from = "/saved-news"
-  to = "/"
-  status = 200
-  force = true
-  [[redirects]]
-  from = "https://desinews.netlify.app/api/users/me"
-  to = "https://newsexplorer-api.herokuapp.com/users/me"
-  status = 200
-  force = true
-  [[redirects]]
-  from = "https://desinews.netlify.app/api/signin"
-  to = "https://newsexplorer-api.herokuapp.com/signin"
-  status = 200
-  force = true
-
-    [[redirects]]
-  from = "https://desinews.netlify.app/api/signup"
-  to = "https://newsexplorer-api.herokuapp.com/signup"
-  status = 200
-  force = true
