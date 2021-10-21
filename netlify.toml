@@ -7,15 +7,19 @@
   to = "/"
   status = 200
   force = true
-
   [[redirects]]
-  from = "/signin"
+  from = "/api/users"
+  to = "https://newsexplorer-api.herokuapp.com/users/me"
+  status = 200
+  force = true
+  [[redirects]]
+  from = "/api/signin"
   to = "https://newsexplorer-api.herokuapp.com/signin"
   status = 200
   force = true
 
     [[redirects]]
-  from = "/signup"
+  from = "/api/signup"
   to = "https://newsexplorer-api.herokuapp.com/signup"
   status = 200
   force = true
