@@ -1,4 +1,4 @@
   
-/api/* https://newsexplorer-api.herokuapp.com/:splat 200 
+/api  https://newsexplorer-api.herokuapp.com/
 /* /index.html 200
   
